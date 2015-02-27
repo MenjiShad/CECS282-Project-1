@@ -55,119 +55,55 @@ void GetMove(int *row, int *col) {
 // Limit 20 lines
 // Place piece on board and go through Othello's rules
 void ApplyMove(char board[][8], int row, int col, char currentPlayer) {
-	board[row][col] = currentPlayer;
+	board[row][col] = currentPlayer; // place piece
 
-	/*
-	// Fails to check if enemy pieces are surrounded by ally pieces
-	for (int i = row + 1, j = col + 1; i < 8 && j < 8; i++, j++) {
-		if (board[i][col] == -currentPlayer) {
-			board[i][col] = -board[i][col];
-		}
-		if (board[row][j] == -currentPlayer) {
-			board[row][j] = -board[row][j];
-		}
-		if (board[i][j] == -currentPlayer) {
-			board[i][j] = -board[i][j];
-		}
-		if (board[j][i] == -currentPlayer) {
-			board[i][j] = -board[j][i];
-		}
-	}
-	*/
+	int i = row, j = col; // temp position holders
 
-	/*
-	int i = row, j = col;
-	// Fails when flipping more than 1 piece
-	// Check down
-	while (board[i + 1][col] == -currentPlayer) {
-		i++;
-		if (board[i + 1][col] == currentPlayer) {
-			for (; i > row; i--) // Solution to flipping more than 1
-				board[i][col] = currentPlayer;
-		}
-	}
+	// Delta's allow for 8-directional check
+	for (int rowDelta = -1; rowDelta <= 1; rowDelta++) {
+		for (int colDelta = -1; colDelta <= 1; colDelta++)
+		{
+			// Is the piece over an enemy piece?
+			if (board[row + rowDelta][col + colDelta] == -currentPlayer)
+			{
+				// Move over to the enemy piece
+                // Resets value of i and j
+				i = row + rowDelta;
+				j = col + colDelta;
 
-	// Check right
-	while (board[row][j + 1] == -currentPlayer) {
-		j++;
-		if (board[row][j + 1] == currentPlayer)
-			board[row][j--] = currentPlayer;
-	}
+				// Loop that will keep stepping in one direction
+				for (;;)
+				{
+					i += rowDelta;
+					j += colDelta;
 
-	// Check up
-	while (board[i - 1][col] == -currentPlayer) {
-		i--;
-		if (board[i - 1][col] == currentPlayer)
-			board[i++][col] = currentPlayer;
-	}
+					// Stop and do nothing upon finding an empty space
+					if (board[i][j] == 0)
+						break;
 
-	// Check left
-	while (board[row][j - 1] == -currentPlayer) {
-		j--;
-		if (board[row][j - 1] == currentPlayer)
-			board[row][j++] = currentPlayer;
-	}
-
-	i = row, j = col;
-	// Check Diagonal Down-Right
-	while (board[i + 1][j + 1] == -currentPlayer) {
-		i++, j++;
-		if (board[i + 1][j + 1] == currentPlayer) {
-			board[i--][j--] = currentPlayer;
+					// If ally piece is found, begin backtracking and flipping
+					if (board[i][j] == currentPlayer)
+					{
+						while (board[i -= rowDelta][j -= colDelta]
+							== -currentPlayer)
+							board[i][j] = currentPlayer;
+						break; // 17 lines
+					}
+				}
+			}
 		}
 	}
-	*/
-
-	/*
-	while (board[row + 1 % 8][col] == -currentPlayer) {
-	row++;
-	if (board[row + 1 % 8][col] == currentPlayer) {
-	while (board[row][col] != currentPlayer) {
-	board[row][col] = currentPlayer;
-	row--;
-	}
-	}
-	}
-
-	while (board[row][col + 1 % 8] == -currentPlayer) {
-	col++;
-	if (board[row][col + 1 % 8] == currentPlayer) {
-	while (board[row][col] != currentPlayer) {
-	board[row][col] = currentPlayer;
-	col--; // 12 lines
-	}
-	}
-	}
-	*/
-
-	/*
-	for (int counter = 0; counter < 8; counter++) {
-	if (board[counter][col] == currentPlayer && counter != row) {
-	while (counter < row) {
-	board[counter][col] = currentPlayer;
-	counter++;
-	}
-	while (counter > row) {
-	board[counter][col] = currentPlayer;
-	counter--; // 9 lines
-	}
-	}
-	if (board[row][counter] == currentPlayer && counter != col) {
-	while (counter < col) {
-	board[row][counter] = currentPlayer;
-	counter++;
-	}
-	while (counter > col) {
-	board[col][counter] = currentPlayer;
-	counter--; // 16 lines
-	}
-	}
-	}
-	*/
 }
 
 // Limit 5 lines
 // Return integer value of the board
 int GetValue(char board[][8]) {
-	return 0; // temp value
+	int total = 0;
+
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			total += board[i][j];
+		}
+	}
+	return total; // temp value
 }
