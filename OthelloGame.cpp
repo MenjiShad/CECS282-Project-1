@@ -58,27 +58,110 @@ void ApplyMove(char board[][8], int row, int col, char currentPlayer) {
 	board[row][col] = currentPlayer;
 
 	/*
+	// Fails to check if enemy pieces are surrounded by ally pieces
+	for (int i = row + 1, j = col + 1; i < 8 && j < 8; i++, j++) {
+		if (board[i][col] == -currentPlayer) {
+			board[i][col] = -board[i][col];
+		}
+		if (board[row][j] == -currentPlayer) {
+			board[row][j] = -board[row][j];
+		}
+		if (board[i][j] == -currentPlayer) {
+			board[i][j] = -board[i][j];
+		}
+		if (board[j][i] == -currentPlayer) {
+			board[i][j] = -board[j][i];
+		}
+	}
+	*/
+
+	/*
+	int i = row, j = col;
+	// Fails when flipping more than 1 piece
+	// Check down
+	while (board[i + 1][col] == -currentPlayer) {
+		i++;
+		if (board[i + 1][col] == currentPlayer) {
+			for (; i > row; i--) // Solution to flipping more than 1
+				board[i][col] = currentPlayer;
+		}
+	}
+
+	// Check right
+	while (board[row][j + 1] == -currentPlayer) {
+		j++;
+		if (board[row][j + 1] == currentPlayer)
+			board[row][j--] = currentPlayer;
+	}
+
+	// Check up
+	while (board[i - 1][col] == -currentPlayer) {
+		i--;
+		if (board[i - 1][col] == currentPlayer)
+			board[i++][col] = currentPlayer;
+	}
+
+	// Check left
+	while (board[row][j - 1] == -currentPlayer) {
+		j--;
+		if (board[row][j - 1] == currentPlayer)
+			board[row][j++] = currentPlayer;
+	}
+
+	i = row, j = col;
+	// Check Diagonal Down-Right
+	while (board[i + 1][j + 1] == -currentPlayer) {
+		i++, j++;
+		if (board[i + 1][j + 1] == currentPlayer) {
+			board[i--][j--] = currentPlayer;
+		}
+	}
+	*/
+
+	/*
+	while (board[row + 1 % 8][col] == -currentPlayer) {
+	row++;
+	if (board[row + 1 % 8][col] == currentPlayer) {
+	while (board[row][col] != currentPlayer) {
+	board[row][col] = currentPlayer;
+	row--;
+	}
+	}
+	}
+
+	while (board[row][col + 1 % 8] == -currentPlayer) {
+	col++;
+	if (board[row][col + 1 % 8] == currentPlayer) {
+	while (board[row][col] != currentPlayer) {
+	board[row][col] = currentPlayer;
+	col--; // 12 lines
+	}
+	}
+	}
+	*/
+
+	/*
 	for (int counter = 0; counter < 8; counter++) {
-		if (board[counter][col] == currentPlayer && counter != row) {		
-			while (counter < row) {
-				board[counter][col] = currentPlayer;
-				counter++;
-			}
-			while (counter > row) {
-				board[counter][col] = currentPlayer;
-				counter--; // 9 lines
-			}
-		}
-		if (board[row][counter] == currentPlayer && counter != col) {
-			while (counter < col) {
-				board[row][counter] = currentPlayer;
-				counter++;
-			}
-			while (counter > col) {
-				board[col][counter] = currentPlayer;
-				counter--; // 16 lines
-			}
-		}
+	if (board[counter][col] == currentPlayer && counter != row) {
+	while (counter < row) {
+	board[counter][col] = currentPlayer;
+	counter++;
+	}
+	while (counter > row) {
+	board[counter][col] = currentPlayer;
+	counter--; // 9 lines
+	}
+	}
+	if (board[row][counter] == currentPlayer && counter != col) {
+	while (counter < col) {
+	board[row][counter] = currentPlayer;
+	counter++;
+	}
+	while (counter > col) {
+	board[col][counter] = currentPlayer;
+	counter--; // 16 lines
+	}
+	}
 	}
 	*/
 }
